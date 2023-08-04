@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using YG;
 
 public class Customer : MonoBehaviour
 {
@@ -27,13 +28,14 @@ public class Customer : MonoBehaviour
             CharacterStorage.instance.UpdateCharacters();
             currentEarnings += 5;
             PlayerPrefs.SetInt("Earnings", currentEarnings);
+            YandexGame.Instance._FullscreenShow();
         }
     }
 
     public void EarnCurrency()
     {
         bool hasTouchInput = Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject();
-        bool hasKeyboardInput = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter);
+        bool hasKeyboardInput = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return);
 
         if (hasTouchInput || hasKeyboardInput)
         {

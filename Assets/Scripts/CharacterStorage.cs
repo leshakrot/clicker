@@ -21,7 +21,7 @@ public class CharacterStorage : MonoBehaviour
         foreach(Character character in _characters)
         {
             character.gameObject.SetActive(true);
-            if (PlayerPrefs.GetInt(gameObject.name) == 1) character.isPurchased = true;
+            if (PlayerPrefs.GetInt(character.name) == 1) character.isPurchased = true;
             else character.gameObject.SetActive(false);
         }
     }
