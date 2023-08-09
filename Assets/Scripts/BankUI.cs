@@ -14,6 +14,6 @@ public class BankUI : MonoBehaviour
 
     public void UpdateCurrencyUI()
     {
-        _currencyAmountText.text = $"¡¿À¿Õ—: {Bank.instance.GetAmountCurrency()}";
+        _currencyAmountText.text = $"{Bank.instance.GetAmountCurrency()}";
     }
 }
