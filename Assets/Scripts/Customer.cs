@@ -4,10 +4,15 @@ using YG;
 
 public class Customer : MonoBehaviour
 {
+    private int upgradeCost = 2500;
+    private int rewardedCurrencyAmount = 1000;
     private int currentEarnings = 5;
     private bool isAutoEarningActive = false;
     private float autoEarnInterval = 1f;
     private float autoEarnTimer = 0f;
+
+    private void OnEnable() => YandexGame.RewardVideoEvent += Rewarded;
+    private void OnDisable() => YandexGame.RewardVideoEvent -= Rewarded;
 
     private void Start()
     {
@@ -34,6 +39,39 @@ public class Customer : MonoBehaviour
                 AutoEarnCurrency();
             }
         }
+    }
+
+    public void BuyCharacter(Character character)
+    {
+        if (character.GetPrice() <= Bank.instance.GetAmountCurrency())
+        {
+            Bank.instance.SpendCurrency(character.GetPrice());
+            BankUI.instance.UpdateCurrencyUI();
+            character.isPurchased = true;
+            string key = character.name;
+            PlayerPrefs.SetInt(key, 1);
+            CharacterStorage.instance.UpdateCharacters();
+            currentEarnings += 5;
+            PlayerPrefs.SetInt("Earnings", currentEarnings);
+            YandexGame.Instance._FullscreenShow();
+        }
+    }
+
+    public void BuyUpgrade()
+    {
+        if (upgradeCost <= Bank.instance.GetAmountCurrency())
+        {
+            Bank.instance.SpendCurrency(upgradeCost);
+            BankUI.instance.UpdateCurrencyUI();
+            ToggleAutoEarning();
+            YandexGame.Instance._FullscreenShow();
+        }
+    }
+
+    public void GetCurrencyForReward()
+    {
+        Bank.instance.AddCurrency(currentEarnings);
+        BankUI.instance.UpdateCurrencyUI();
     }
 
     public void ToggleAutoEarning()
@@ -65,5 +103,11 @@ public class Customer : MonoBehaviour
             Bank.instance.AddCurrency(currentEarnings);
             BankUI.instance.UpdateCurrencyUI();
         }
+    }
+
+    void Rewarded(int id)
+    {
+        Bank.instance.AddCurrency(rewardedCurrencyAmount);
+        BankUI.instance.UpdateCurrencyUI();
     }
 }
