@@ -28,11 +28,12 @@ public class ButtonVisibility : MonoBehaviour
         {
             if (2500 <= Bank.instance.GetAmountCurrency())
             {
+                Debug.Log("NULL");
                 string key = "Button" + button.name;
                 button.gameObject.SetActive(false);
-                PlayerPrefs.SetInt(key, BoolToInt(button.gameObject.activeSelf));
-                return;
+                PlayerPrefs.SetInt(key, BoolToInt(button.gameObject.activeSelf));    
             }
+            return;
         }
 
         _purchaseButton = button.gameObject.GetComponent<PurchaseButton>();

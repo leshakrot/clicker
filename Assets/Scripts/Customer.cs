@@ -4,6 +4,9 @@ using YG;
 
 public class Customer : MonoBehaviour
 {
+    [SerializeField] private AudioSource _clickSound;
+    [SerializeField] private AudioSource[] _spawnCharacterMusic;
+    [SerializeField] private Animation _pressAnim;
     private int upgradeCost = 2500;
     private int rewardedCurrencyAmount = 1000;
     private int currentEarnings = 5;
@@ -18,16 +21,11 @@ public class Customer : MonoBehaviour
     {
         currentEarnings = PlayerPrefs.GetInt("Earnings", 5);
         isAutoEarningActive = PlayerPrefs.GetInt("AutoEarningActive", 0) == 1;
-
-        if (isAutoEarningActive)
-        {
-            InvokeRepeating("AutoEarnCurrency", autoEarnInterval, autoEarnInterval);
-        }
     }
 
     private void Update()
     {
-        EarnCurrency();
+        //EarnCurrency();
 
         if (isAutoEarningActive)
         {
@@ -53,6 +51,7 @@ public class Customer : MonoBehaviour
             CharacterStorage.instance.UpdateCharacters();
             currentEarnings += 5;
             PlayerPrefs.SetInt("Earnings", currentEarnings);
+            _spawnCharacterMusic[currentEarnings/5 - 1].Play();
             YandexGame.Instance._FullscreenShow();
         }
     }
@@ -81,10 +80,10 @@ public class Customer : MonoBehaviour
         PlayerPrefs.SetInt("AutoEarningActive", isAutoEarningActive ? 1 : 0);
         PlayerPrefs.Save();
 
-        if (isAutoEarningActive)
-        {
-            AutoEarnCurrency();
-        }
+        //if (isAutoEarningActive)
+        //{
+           // AutoEarnCurrency();
+        //}
     }
 
     private void AutoEarnCurrency()
@@ -109,5 +108,13 @@ public class Customer : MonoBehaviour
     {
         Bank.instance.AddCurrency(rewardedCurrencyAmount);
         BankUI.instance.UpdateCurrencyUI();
+    }
+
+    public void EarnCurrencyForPressButton()
+    {
+        Bank.instance.AddCurrency(currentEarnings);
+        BankUI.instance.UpdateCurrencyUI();
+        _clickSound.Play();
+        _pressAnim.Play();
     }
 }
